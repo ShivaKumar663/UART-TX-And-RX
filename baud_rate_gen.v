@@ -1,47 +1,35 @@
 `timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 02.08.2025 09:12:12
-// Design Name: 
-// Module Name: baud_rate_gen\
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
+
+/* The baud rate generator is used to generate baud rate, here we are using generating the baudrate of 9600 which is derived from the 100 MHZ clk
+   here we will take a count which will count upto 10417 we have obtained this value by dividing our freq/baud_rate...the data transfer takes place in 
+   UART Protocol based on the baud_tick we are generating as by the name it is asynchronous it does not depends on the clock */
 
 
-module baud_rate_gen(flag,clk,rst);
- reg [7:0] baud_rate;
-output reg flag;
+module Baud_rate_gen(flag,clk,rst);
 input clk,rst;
+output reg flag;
+reg [13:0]count;
+
+parameter baud_tick = 10417;
+
 
 always@(posedge clk)
 begin
     if(rst)
         begin
-            baud_rate <= 0;
+            count <= 0;
             flag <= 0;
          end
         
-   else if(baud_rate == 145)
+   else if(count == baud_tick)
     begin
-        baud_rate <= 0;
+        count <= 0;
         flag <= 1;
     end  
     
     else
         begin
-            baud_rate <= baud_rate + 1;
+            count <= count + 1;
             flag <= 0;
         end   
     
